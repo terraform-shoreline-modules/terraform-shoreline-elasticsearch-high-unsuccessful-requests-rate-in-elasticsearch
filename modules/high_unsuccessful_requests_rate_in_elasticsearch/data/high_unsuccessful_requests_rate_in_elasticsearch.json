@@ -1,0 +1,214 @@
+{
+  "name": "high_unsuccessful_requests_rate_in_elasticsearch",
+  "description": "This incident type typically occurs when the unsuccessful requests rate in ElasticSearch is higher than the expected threshold. This may indicate that there are issues with the ElasticSearch cluster or that it is not able to handle the requests in a timely manner. To prevent further issues, it is important to investigate the root cause and address any underlying issues that may be causing the high unsuccessful requests rate. This will help ensure that the ElasticSearch cluster is able to handle requests efficiently and effectively.",
+  "params": [
+    {
+      "name": "ELASTICSEARCH_HOST",
+      "value": ""
+    },
+    {
+      "name": "CACHE_TIME",
+      "value": ""
+    },
+    {
+      "name": "PATH_TO_ELASTICSEARCH_LOGS",
+      "value": ""
+    },
+    {
+      "name": "ELASTICSEARCH_CONFIG",
+      "value": ""
+    },
+    {
+      "name": "ELASTICSEARCH_PATH",
+      "value": ""
+    },
+    {
+      "name": "SHARD_NUMBER",
+      "value": ""
+    },
+    {
+      "name": "THRESHOLD",
+      "value": ""
+    },
+    {
+      "name": "INDEX_NAME",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## High Unsuccessful Requests Rate in ElasticSearch\nThis incident type typically occurs when the unsuccessful requests rate in ElasticSearch is higher than the expected threshold. This may indicate that there are issues with the ElasticSearch cluster or that it is not able to handle the requests in a timely manner. To prevent further issues, it is important to investigate the root cause and address any underlying issues that may be causing the high unsuccessful requests rate. This will help ensure that the ElasticSearch cluster is able to handle requests efficiently and effectively."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch cluster health"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/_cluster/health?pretty'`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch cluster state"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/_cluster/state?pretty'`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch cluster stats"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/_nodes/stats?pretty'`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch index health"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/_cat/indices?v'`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch index status"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/_cat/shards?v'`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch index settings"
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/${INDEX_NAME}/_settings?pretty'`"
+    },
+    {
+      "name": "cell_14",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch index mappings"
+    },
+    {
+      "name": "cell_15",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/${INDEX_NAME}/_mapping?pretty'`"
+    },
+    {
+      "name": "cell_16",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check ElasticSearch index stats"
+    },
+    {
+      "name": "cell_17",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -XGET '${ELASTICSEARCH_HOST}:9200/${INDEX_NAME}/_stats?pretty'`"
+    },
+    {
+      "name": "cell_18",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## ElasticSearch cluster is overloaded and unable to handle the incoming requests, leading to high unsuccessful request rates."
+    },
+    {
+      "name": "cell_19",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_short_name_get_unsuccessful_rate($ELASTICSEARCH_HOST, $THRESHOLD)"
+    },
+    {
+      "name": "cell_20",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## The ElasticSearch cluster may be experiencing issues with memory or disk space, causing requests to fail and resulting in high unsuccessful request rates."
+    },
+    {
+      "name": "cell_21",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_monitor_system_stats($PATH_TO_ELASTICSEARCH_LOGS)"
+    },
+    {
+      "name": "cell_22",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## ElasticSearch indices or shards may have become corrupted or damaged, leading to frequent unsuccessful requests and high unsuccessful request rates."
+    },
+    {
+      "name": "cell_23",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_check_index_shard_corruption($ELASTICSEARCH_HOST, $SHARD_NUMBER, $INDEX_NAME)"
+    },
+    {
+      "name": "cell_24",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Optimize the ElasticSearch cluster to improve its performance and reduce the number of unsuccessful requests."
+    },
+    {
+      "name": "cell_25",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_optimize_elasticsearch($ELASTICSEARCH_CONFIG, $ELASTICSEARCH_PATH)"
+    },
+    {
+      "name": "cell_26",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Implement caching mechanisms to reduce the number of requests being made to ElasticSearch. This may involve"
+    },
+    {
+      "name": "cell_27",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_configure_caching($ELASTICSEARCH_HOST, $CACHE_TIME)"
+    }
+  ]
+}
